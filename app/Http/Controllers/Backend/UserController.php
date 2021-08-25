@@ -16,9 +16,13 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users=User::all();
+        if($request->has('search')){
+            $users=User::Where('username','like',"%{$request->search}%")->orWhere('email','like',"%{$request->search}%")->get();
+        }else{
+            $users=User::all();
+        }
         return view('users.index',compact('users'));
     }
 
@@ -71,7 +75,15 @@ class UserController extends Controller
     {
         return view('users.edit',compact('user'));
     }
+    public function search(Request $request){
+        $user=User::all();
+        if($request->has('search')){
 
+
+        }
+        return view('users.index',compact('user'));
+
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -97,8 +109,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        if(auth()->user()->id == $user->id){
+            return redirect()->route('users.index')->with('message','You are deleting yourself.');
+        }
+        $user->delete();
+        return redirect()->route('users.index')->with('message','User deleted succesfully');
+ 
     }
 }
