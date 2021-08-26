@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\Backend\ChangePassword;
 use App\Http\Controllers\Backend\UserController;
@@ -28,3 +29,4 @@ Route::resource('users',UserController::class);
 Route::resource('countries',CountryController::class);
 Route::post('users/{user}/change-password',[ChangePassword::Class,'change_password'])->name('users.change.password');
 Route::resource('states',StateController::class);
+Route::resource('cities',CityController::class);
