@@ -40,7 +40,7 @@
             <hr class="sidebar-divider">
             <!-- Nav Item - Employees -->
             <li class="nav-item ">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="/employees">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Employee Management</span></a>
             </li>
