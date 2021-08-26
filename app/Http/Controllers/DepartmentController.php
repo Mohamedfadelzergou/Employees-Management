@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use Illuminate\Http\Request;
+use App\Http\Requests\DepartmentStoreRequest;
 
 class DepartmentController extends Controller
 {
@@ -11,9 +13,13 @@ class DepartmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $departments=Department::all();
+        if($request->has('search')){
+            $departments=Department::Where('name','like',"%{$request->search}%")->get();
+        }
+        return view('department.index',['departments'=>$departments]);
     }
 
     /**
@@ -23,7 +29,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        return view('department.create');
     }
 
     /**
@@ -32,9 +38,10 @@ class DepartmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DepartmentStoreRequest $request)
     {
-        //
+        Department::create($request->validated());
+        return redirect()->route('departments.index')->with('message','Department created successflly !!');
     }
 
     /**
@@ -54,9 +61,9 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Department $department)
     {
-        //
+        return view('department.edit',['department'=>$department]);
     }
 
     /**
@@ -66,9 +73,12 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(DepartmentStoreRequest $request, Department $department)
     {
-        //
+        $department->update([
+            'name'=>$request->name,
+        ]);
+        return redirect()->route('departments.index')->with('message','Department Updated successflly !!');
     }
 
     /**
@@ -77,8 +87,9 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Department $department)
     {
-        //
+        $department->delete();
+        return redirect()->route('departments.index')->with('message','Department Delete successflly !!');
     }
 }
