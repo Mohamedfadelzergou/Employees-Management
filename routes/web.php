@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CityController;
-use App\Http\Controllers\StateController;
-use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\Backend\CityController;
+use App\Http\Controllers\Backend\StateController;
+use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\ChangePassword;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\CountryController;
@@ -34,4 +34,4 @@ Route::resource('cities',CityController::class);
 Route::resource('departments',DepartmentController::class);
 Route::get('{any}',function(){
     return view('employees.index');
-})->where('{any}','.*');
+})->where('any','.*');

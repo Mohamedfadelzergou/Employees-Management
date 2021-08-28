@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\EmployeeResource;
+use App\Http\Requests\EmployeeStoreRequest;
+use App\Http\Resources\EmployeeSingleResource;
 
 class EmployeeController extends Controller
 {
@@ -12,9 +16,15 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $employees=Employee::all();
+        if($request->search){
+        $employees=Employee::Where('first_name','like',"%{$request->search}%")->orWhere('last_name','like',"%{$request->search}%")->get();  
+        }elseif($request->department_id){
+            $employees=Employee::Where('department_id','like',$request->department_id)->get();  
+        }
+        return EmployeeResource::collection($employees);
     }
 
     /**
@@ -33,9 +43,10 @@ class EmployeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EmployeeStoreRequest $request)
     {
-        //
+        $employee=Employee::create($request->validated());
+        return response()->json($employee);
     }
 
     /**
@@ -44,9 +55,9 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Employee $employee)
     {
-        //
+        return new EmployeeSingleResource($employee);
     }
 
     /**
@@ -55,9 +66,9 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Employee $employee)
     {
-        //
+        
     }
 
     /**
@@ -67,9 +78,10 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EmployeeStoreRequest $request,Employee $employee)
     {
-        //
+        $employee->update($request->validated());
+        return response()->json('Employee Updated Successfully !!');
     }
 
     /**
@@ -78,8 +90,9 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Employee $employee)
     {
-        //
+        $employee->delete();
+        return response()->json('Employee Deleted Successfully !!');
     }
 }

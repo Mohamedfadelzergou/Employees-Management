@@ -10,7 +10,7 @@
             <div class="card">
                 <div class="card-header">
                     {{ __('Update Country') }}
-                    <a href="{{route('countries.index')}}" class="float-right btn btn-success">Back</a>
+                    
                 </div>
 
                 <div class="card-body">
